@@ -1,0 +1,59 @@
+---
+- name: Set PubkeyAuthentication value in config
+  ansible.windows.win_lineinfile:
+    path: '{{ windows_ssh_install_path }}\sshd_config_default'
+    line: PubkeyAuthentication {{ windows_ssh_pubkeys_enabled | ternary('yes', 'no') }}
+    regexp: '^#?PubkeyAuthentication\s+'
+    state: present
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Set PasswordAuthentication value in config
+  ansible.windows.win_lineinfile:
+    path: '{{ windows_ssh_install_path }}\sshd_config_default'
+    line: PasswordAuthentication {{ windows_ssh_passwords_enabled | ternary('yes', 'no') }}
+    regexp: '^#?PasswordAuthentication\s+'
+    state: present
+
+- name: Set PermitUserEnvironment value in config
+  ansible.windows.win_lineinfile:
+    path: '{{ windows_ssh_install_path }}\sshd_config_default'
+    line: PermitUserEnvironment yes
+    regexp: '^#?PermitUserEnvironment\s+'
+    state: present
+
+- name: Set StrictModes value in config
+  ansible.windows.win_lineinfile:
+    path: '{{ windows_ssh_install_path }}\sshd_config_default'
+    line: StrictModes no
+    regexp: '^#?StrictModes\s+'
+    state: present
+
+- name: Check if the server config directory already exists
+  ansible.windows.win_stat:
+    path: '{{ ansible_env.ProgramData }}\ssh'
+  register: ssh_server_config_dir
+
+- name: Copy the template sshd_config_default file to the actual service location
+  ansible.windows.win_copy:
+    src: '{{ windows_ssh_install_path }}\sshd_config_default'
+    dest: '{{ ansible_env.ProgramData }}\ssh\sshd_config'
+    remote_src: True
+  when: ssh_server_config_dir.stat.exists
+
+- name: Set DefaultShell in OpenSSH registry key
+  ansible.windows.win_regedit:
+    path: HKLM\SOFTWARE\OpenSSH
+    name: DefaultShell
+    value: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+    type: string
+    state: present
+
+- name: Add OpenSSH firewall rule for sshd
+  ansible.windows.win_firewall_rule:
+    name: sshd
+    display_name: 'OpenSSH Server (sshd)'
+    enabled: true
+    direction: in
+    action: allow
+    protocol: tcp
+    localport: '22'

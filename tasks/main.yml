@@ -1,0 +1,16 @@
+---
+- name: Download & install latest OpenSSH release
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure environment variables
+  ansible.builtin.include_tasks: environment.yml
+
+- name: Configure sshd & shell
+  ansible.builtin.include_tasks: config.yml
+
+- name: Add public keys
+  ansible.builtin.include_tasks: keys.yml
+  when: windows_ssh_pubkeys_enabled
+
+- name: Configure services
+  ansible.builtin.include_tasks: services.yml

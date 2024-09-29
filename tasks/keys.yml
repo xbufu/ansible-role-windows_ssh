@@ -1,0 +1,31 @@
+---
+- name: Ensure the .ssh directory exists for the user
+  ansible.windows.win_file:
+    path: '{{ ansible_env.USERPROFILE }}\.ssh'
+    state: directory
+    force: true
+
+- name: Add public key to the user's authorized_keys
+  ansible.windows.win_lineinfile:
+    path: '{{ ansible_env.USERPROFILE }}\.ssh\authorized_keys'
+    line: '{{ item }}'
+    create: true
+    state: present
+  loop: '{{ windows_ssh_public_keys }}'
+
+- name: Ensure the ProgramData\ssh directory exists
+  ansible.windows.win_file:
+    path: '{{ ansible_env.ProgramData }}\ssh'
+    state: directory
+
+- name: Add public key to administrators_authorized_keys
+  ansible.windows.win_lineinfile:
+    path: '{{ ansible_env.ProgramData }}\ssh\administrators_authorized_keys'
+    line: '{{ item }}'
+    create: true
+    state: present
+  loop: '{{ windows_ssh_public_keys }}'
+
+- name: Fix permissions on administrators_authorized_keys
+  ansible.windows.win_shell: |
+    icacls.exe '{{ ansible_env.ProgramData }}\ssh\administrators_authorized_keys' /inheritance:r /grant 'Administrators:F' /grant 'SYSTEM:F'

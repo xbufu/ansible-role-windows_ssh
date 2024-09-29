@@ -1,0 +1,16 @@
+---
+- name: Create OPENSSH_HOME environment variable
+  win_environment:
+    name: OPENSSH_HOME
+    level: machine
+    state: present
+    value: '{{ windows_ssh_install_path }}'
+
+- name: Add folders to to system PATH
+  win_path:
+    name: PATH
+    scope: machine
+    state: present
+    elements: 
+      - '%OPENSSH_HOME%'
+      - '{{ windows_ssh_install_path }}'

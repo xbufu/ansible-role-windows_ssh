@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  role_name: windows_ssh
+  author: xbufu
+  description: Windows SSH role.
+  company: Bufu-Security
+  license: license (BSD, MIT)
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Windows
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+    - development
+    - devops
+    - automation
+    - vm
+    - ansible
+    - ssh
+    - openssh
+    - windows

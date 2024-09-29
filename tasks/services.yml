@@ -1,0 +1,12 @@
+---
+- name: Configure ssh-agent service
+  ansible.windows.win_service:
+    name: ssh-agent
+    state: restarted
+    start_mode: auto
+
+- name: Configure sshd service
+  ansible.windows.win_service:
+    name: sshd
+    state: restarted
+    start_mode: auto
