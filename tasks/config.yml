@@ -1,33 +1,4 @@
 ---
-- name: Set PubkeyAuthentication value in config
-  ansible.windows.win_lineinfile:
-    path: '{{ windows_ssh_install_path }}\sshd_config_default'
-    line: PubkeyAuthentication {{ windows_ssh_pubkeys_enabled | ternary('yes', 'no') }}
-    regexp: '^#?PubkeyAuthentication\s+'
-    state: present
-  ignore_errors: '{{ ansible_check_mode }}'
-
-- name: Set PasswordAuthentication value in config
-  ansible.windows.win_lineinfile:
-    path: '{{ windows_ssh_install_path }}\sshd_config_default'
-    line: PasswordAuthentication {{ windows_ssh_passwords_enabled | ternary('yes', 'no') }}
-    regexp: '^#?PasswordAuthentication\s+'
-    state: present
-
-- name: Set PermitUserEnvironment value in config
-  ansible.windows.win_lineinfile:
-    path: '{{ windows_ssh_install_path }}\sshd_config_default'
-    line: PermitUserEnvironment yes
-    regexp: '^#?PermitUserEnvironment\s+'
-    state: present
-
-- name: Set StrictModes value in config
-  ansible.windows.win_lineinfile:
-    path: '{{ windows_ssh_install_path }}\sshd_config_default'
-    line: StrictModes no
-    regexp: '^#?StrictModes\s+'
-    state: present
-
 - name: Check if the server config directory already exists
   ansible.windows.win_stat:
     path: '{{ ansible_env.ProgramData }}\ssh'
@@ -40,6 +11,34 @@
     remote_src: true
   when: ssh_server_config_dir.stat.exists
 
+- name: Set PubkeyAuthentication value in config
+  community.windows.win_lineinfile:
+    path: '{{ ansible_env.ProgramData }}\ssh\sshd_config'
+    regexp: '^#?PubkeyAuthentication\s+'
+    line: PubkeyAuthentication {{ windows_ssh_pubkeys_enabled | ternary('yes', 'no') }}
+    state: present
+
+- name: Set PasswordAuthentication value in config
+  community.windows.win_lineinfile:
+    path: '{{ ansible_env.ProgramData }}\ssh\sshd_config'
+    regexp: '^#?PasswordAuthentication\s+'
+    line: PasswordAuthentication {{ windows_ssh_passwords_enabled | ternary('yes', 'no') }}
+    state: present
+
+- name: Set PermitUserEnvironment value in config
+  community.windows.win_lineinfile:
+    path: '{{ ansible_env.ProgramData }}\ssh\sshd_config'
+    regexp: '^#?PermitUserEnvironment\s+'
+    line: PermitUserEnvironment yes
+    state: present
+
+- name: Set StrictModes value in config
+  community.windows.win_lineinfile:
+    path: '{{ ansible_env.ProgramData }}\ssh\sshd_config'
+    regexp: '^#?StrictModes\s+'
+    line: StrictModes no
+    state: present
+
 - name: Set DefaultShell in OpenSSH registry key
   ansible.windows.win_regedit:
     path: HKLM\SOFTWARE\OpenSSH
@@ -49,7 +48,7 @@
     state: present
 
 - name: Add OpenSSH firewall rule for sshd
-  ansible.windows.win_firewall_rule:
+  community.windows.win_firewall_rule:
     name: sshd
     display_name: 'OpenSSH Server (sshd)'
     enabled: true

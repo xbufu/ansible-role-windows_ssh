@@ -25,13 +25,13 @@
     openssh_msi_name: "{{ openssh_asset.name }}"
     openssh_msi_path: '{{ windows_ssh_download_path }}\{{ openssh_asset.name }}'
 
-- name: Download OpenSSH MSI file to the home directory
+- name: Download OpenSSH MSI file
   ansible.windows.win_get_url:
     url: "{{ openssh_msi_url }}"
     dest: "{{ openssh_msi_path }}"
     force: true
 
-- name: Install OpenSSH using the downloaded MSI file
+- name: Install OpenSSH
   ansible.windows.win_package:
     path: "{{ openssh_msi_path }}"
     arguments: "/qb"

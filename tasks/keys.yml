@@ -6,7 +6,7 @@
     force: true
 
 - name: Add public key to the user's authorized_keys
-  ansible.windows.win_lineinfile:
+  community.windows.win_lineinfile:
     path: '{{ ansible_env.USERPROFILE }}\.ssh\authorized_keys'
     line: '{{ item }}'
     create: true
@@ -19,7 +19,7 @@
     state: directory
 
 - name: Add public key to administrators_authorized_keys
-  ansible.windows.win_lineinfile:
+  community.windows.win_lineinfile:
     path: '{{ ansible_env.ProgramData }}\ssh\administrators_authorized_keys'
     line: '{{ item }}'
     create: true
