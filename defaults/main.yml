@@ -3,5 +3,5 @@ windows_ssh_download_path: '{{ ansible_env.TEMP | default(ansible_env.TMP) }}\Op
 windows_ssh_install_path: 'C:\Program Files\OpenSSH'
 windows_ssh_pubkeys_enabled: true
 windows_ssh_passwords_enabled: true
-windows_ssh_public_keys: 
+windows_ssh_public_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIQIR1skomUNRz8ezrJrdyefNoE9mL4s0jaoKg0yinuI

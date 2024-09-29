@@ -37,7 +37,7 @@
   ansible.windows.win_copy:
     src: '{{ windows_ssh_install_path }}\sshd_config_default'
     dest: '{{ ansible_env.ProgramData }}\ssh\sshd_config'
-    remote_src: True
+    remote_src: true
   when: ssh_server_config_dir.stat.exists
 
 - name: Set DefaultShell in OpenSSH registry key

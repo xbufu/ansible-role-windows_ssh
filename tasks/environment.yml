@@ -11,6 +11,6 @@
     name: PATH
     scope: machine
     state: present
-    elements: 
+    elements:
       - '%OPENSSH_HOME%'
       - '{{ windows_ssh_install_path }}'
