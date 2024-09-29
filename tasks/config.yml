@@ -41,16 +41,15 @@
 
 - name: Set DefaultShell in OpenSSH registry key
   ansible.windows.win_regedit:
-    path: HKLM\SOFTWARE\OpenSSH
+    path: HKLM:\SOFTWARE\OpenSSH
     name: DefaultShell
-    value: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+    data: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
     type: string
     state: present
 
 - name: Add OpenSSH firewall rule for sshd
   community.windows.win_firewall_rule:
-    name: sshd
-    display_name: 'OpenSSH Server (sshd)'
+    name: 'OpenSSH Server (sshd)'
     enabled: true
     direction: in
     action: allow

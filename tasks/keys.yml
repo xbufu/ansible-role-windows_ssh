@@ -3,7 +3,6 @@
   ansible.windows.win_file:
     path: '{{ ansible_env.USERPROFILE }}\.ssh'
     state: directory
-    force: true
 
 - name: Add public key to the user's authorized_keys
   community.windows.win_lineinfile:
